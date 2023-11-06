@@ -4,5 +4,5 @@ second task of the course: Computing and Discrete Structures I of ICESI Universi
 
 ## Team members
 * Nicolás Cardona A00373470
-* Danna Valentina 
+* Danna Valentina A00395625
 * Juan Camilo Corrales Osvath A00366910
