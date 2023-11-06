@@ -2,7 +2,7 @@
 This repository was created to showcase the progress and development of the 
 second task of the course: Computing and Discrete Structures I of ICESI University
 
-##Team members
-* Nicolás Cardona
+## Team members
+* Nicolás Cardona A00373470
 * Danna Valentina 
 * Juan Camilo Corrales Osvath A00366910
