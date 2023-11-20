@@ -298,4 +298,19 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
 
         return mst;
     }
+
+    @Override
+    public int getEdgeWeight(T source, T destination){
+        Node<T> sourceNode = map.get(source);
+
+        if (sourceNode != null) {
+            for (Edge<T> edge : sourceNode.getEdges()) {
+                if (edge.getNode().getValue().equals(destination)) {
+                    return edge.getWeight();
+                }
+            }
+        }
+
+        return -1;
+    }
 }

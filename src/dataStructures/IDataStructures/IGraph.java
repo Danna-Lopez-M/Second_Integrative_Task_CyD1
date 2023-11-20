@@ -20,4 +20,6 @@ public interface IGraph<T> {
     Map<T, Map<T, Integer>> floydWarshall();
     Map<T, T> primMST();
     List<Edge<T>> kruskalMST();
+
+    int getEdgeWeight(T a, T b);
 }

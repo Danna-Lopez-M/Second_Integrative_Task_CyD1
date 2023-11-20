@@ -43,6 +43,15 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
     }
 
     @Override
+    public int getEdgeWeight(T source, T destination){
+        HashMap<T, Integer> sourceEdges = map.get(source);
+        if (sourceEdges != null){
+            return sourceEdges.getOrDefault(destination, -1);
+        }
+        return -1;
+    }
+
+    @Override
     public List<T> bfs(T start) {
         if (!map.containsKey(start))
             return null;
