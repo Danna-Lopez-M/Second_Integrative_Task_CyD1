@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GraphTest {
     IGraph<String> graph;
+    //usar solo un setup
     public void setUpAddVertex1(){
         graph = new AdjacencyMatrix<>();
         //graph = new AdjacencyList<>();
