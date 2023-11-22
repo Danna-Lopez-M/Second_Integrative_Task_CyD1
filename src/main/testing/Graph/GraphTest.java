@@ -10,15 +10,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GraphTest {
-    IGraph<String> graph;
+    Graph<String> graph;
     //usar solo un setup
-    public void setUpAddVertex1(){
-        graph = new AdjacencyMatrix<>();
-        //graph = new AdjacencyList<>();
-    }
+
     public void setUp1(){
         graph = new AdjacencyMatrix<>();
-        //graph = new AdjacencyList<>();
+    }
+    public void setUp2(){
+        graph = new AdjacencyList<>();
     }
     @Test
     public void addVertexTestStandard(){
