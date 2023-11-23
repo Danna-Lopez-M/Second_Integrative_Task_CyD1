@@ -1,7 +1,9 @@
 package Graph;
 
 
+import com.example.demo.dataStructures.AdjacencyList;
 import com.example.demo.dataStructures.AdjacencyMatrix;
+import com.example.demo.dataStructures.Graph;
 import com.example.demo.dataStructures.IDataStructures.IGraph;
 import org.junit.jupiter.api.Test;
 
