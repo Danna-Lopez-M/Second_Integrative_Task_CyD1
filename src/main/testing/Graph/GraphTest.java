@@ -1,7 +1,9 @@
 package Graph;
 
 
+import com.example.demo.dataStructures.AdjacencyList;
 import com.example.demo.dataStructures.AdjacencyMatrix;
+import com.example.demo.dataStructures.Graph;
 import com.example.demo.dataStructures.IDataStructures.IGraph;
 import org.junit.jupiter.api.Test;
 
@@ -10,15 +12,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GraphTest {
-    IGraph<String> graph;
+    Graph<String> graph;
     //usar solo un setup
-    public void setUpAddVertex1(){
-        graph = new AdjacencyMatrix<>();
-        //graph = new AdjacencyList<>();
-    }
+
     public void setUp1(){
         graph = new AdjacencyMatrix<>();
-        //graph = new AdjacencyList<>();
+    }
+    public void setUp2(){
+        graph = new AdjacencyList<>();
     }
     @Test
     public void addVertexTestStandard(){

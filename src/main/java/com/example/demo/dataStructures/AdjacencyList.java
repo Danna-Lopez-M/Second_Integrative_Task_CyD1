@@ -5,10 +5,9 @@ import com.example.demo.dataStructures.IDataStructures.IGraph;
 
 import java.util.*;
 
-public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
+public class AdjacencyList<T extends Comparable<T>> extends Graph<T> {
     private Map<T, Node<T>> map = new HashMap<>();
 
-    @Override
     public void addVertex(T value) {
         if (!map.containsKey(value)) {
             Node<T> node = new Node<>(value);
@@ -16,7 +15,6 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         }
     }
 
-    @Override
     public void addEdge(T source, T destination, int weight) {
         Node<T> sourceNode = map.get(source);
         Node<T> destinationNode = map.get(destination);
@@ -34,7 +32,6 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         sourceNode.addNeighbor(new Edge<>(sourceNode, destinationNode, weight));
     }
 
-    @Override
     public List<T> getNeighbors(T value) {
         Node<T> node = map.get(value);
         if (node == null) {
@@ -48,7 +45,6 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         }
     }
 
-    @Override
     public List<T> bfs(T start) {
         if (!map.containsKey(start))
             return null;
@@ -75,7 +71,6 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         return bfs;
     }
 
-    @Override
     public void dfs(T start) {
         if (!map.containsKey(start))
             return;
@@ -101,12 +96,10 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         }
     }
 
-    @Override
     public List<T> getVertices() {
         return new ArrayList<>(map.keySet());
     }
 
-    @Override
     public void removeVertex(T value) {
         Node<T> node = map.get(value);
         if (node != null) {
@@ -117,7 +110,6 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         }
     }
 
-    @Override
     public void removeEdge(T source, T destination) {
         Node<T> sourceNode = map.get(source);
         Node<T> destinationNode = map.get(destination);
@@ -127,12 +119,10 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         }
     }
 
-    @Override
     public void clear() {
         map.clear();
     }
 
-    @Override
     public Map<T, Pair<Integer, T>> dijkstra(T start) {
         if (!map.containsKey(start))
             return new HashMap<>();
@@ -291,7 +281,6 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         return mst;
     }
 
-    @Override
     public int getEdgeWeight(T source, T destination){
         Node<T> sourceNode = map.get(source);
 

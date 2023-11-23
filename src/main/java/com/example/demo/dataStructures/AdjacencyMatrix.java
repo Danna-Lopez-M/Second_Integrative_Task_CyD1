@@ -5,23 +5,20 @@ import com.example.demo.dataStructures.IDataStructures.IGraph;
 
 import java.util.*;
 
-public class AdjacencyMatrix<T> implements IGraph<T> {
+public class AdjacencyMatrix<T> extends Graph<T> {
 
     private HashMap<T, HashMap<T, Integer>> map = new HashMap<>();
 
-    @Override
     public void addVertex(T value) {
         map.putIfAbsent(value, new HashMap<>());
     }
 
-    @Override
     public void addEdge(T source, T destination, int weight) {
         addVertex(source);
         addVertex(destination);
         map.get(source).putIfAbsent(destination, weight);
     }
 
-    @Override
     public List<T> getNeighbors(T value) {
         HashMap<T, Integer> nodes = map.get(value);
         if (nodes == null) {
@@ -35,7 +32,6 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         }
     }
 
-    @Override
     public int getEdgeWeight(T source, T destination){
         HashMap<T, Integer> sourceEdges = map.get(source);
         if (sourceEdges != null){
@@ -44,7 +40,6 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         return -1;
     }
 
-    @Override
     public List<T> bfs(T start) {
         if (!map.containsKey(start))
             return null;
@@ -68,7 +63,6 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         return bfs;
     }
 
-    @Override
     public void dfs(T start) {
         if (!map.containsKey(start))
             return;
@@ -92,12 +86,10 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         }
     }
 
-    @Override
     public List<T> getVertices() {
         return new ArrayList<>(map.keySet());
     }
 
-    @Override
     public void removeVertex(T value) {
         if (map.containsKey(value)) {
             Set<T> edges = map.keySet();
@@ -108,19 +100,16 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         }
     }
 
-    @Override
     public void removeEdge(T source, T destination) {
         if (map.containsKey(source) && map.containsKey(destination)) {
             map.get(source).remove(destination);
         }
     }
 
-    @Override
     public void clear() {
         map.clear();
     }
 
-    @Override
     public Map<T, Pair<Integer, T>> dijkstra(T start) {
         if (!map.containsKey(start))
             return new HashMap<>();
