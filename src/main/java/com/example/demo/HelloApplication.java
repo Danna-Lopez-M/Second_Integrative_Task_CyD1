@@ -7,9 +7,12 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -27,54 +30,53 @@ public class HelloApplication extends Application {
             adjacencyListGraph.addVertex("V" + i);
         }
 
-        // Agregar 50 aristas de manera aleatoria
-        for (int i = 0; i < 50; i++) {
-            int sourceVertex = (int) (Math.random() * 50) + 1;
-            int destinationVertex = (int) (Math.random() * 50) + 1;
-            int weight = (int) (Math.random() * 10) + 1; // Peso aleatorio entre 1 y 10
-
-            adjacencyListGraph.addEdge("V" + sourceVertex, "V" + destinationVertex, weight);
-        }
-        // despues aplicamos prim para generar el laberinto
-
-        // Imprimir vértices y aristas (solo para verificación)
-        System.out.println("Vertices: " + adjacencyListGraph.getVertices());
-        System.out.println("Aristas: " + adjacencyListGraph);
-
-        // Instancia de grafo utilizando matriz de adyacencia
-        IGraph<String> adjacencyMatrixGraph = new AdjacencyMatrix<>();
-
-        // Agregar 50 vértices
+// Conectar todos los vértices entre sí
         for (int i = 1; i <= 50; i++) {
-            adjacencyMatrixGraph.addVertex("V" + i);
+            for (int j = i + 1; j <= 50; j++) {
+                int weight = (int) (Math.random() * 10) + 1; // Peso aleatorio entre 1 y 10
+                adjacencyListGraph.addEdge("V" + i, "V" + j, weight);
+                adjacencyListGraph.addEdge("V" + j, "V" + i, weight); // Asegurar conexión bidireccional
+            }
+        }
+        // Aplicar el algoritmo de Prim
+        Map<String, String> primResult = adjacencyListGraph.primMST();
+
+        // Crear una interfaz gráfica para visualizar el árbol de recubrimiento mínimo
+        Pane root = new Pane();
+
+        // Crear RadioButtons para cada vértice
+        ToggleGroup toggleGroup = new ToggleGroup();
+        for (String vertex : adjacencyListGraph.getVertices()) {
+            RadioButton radioButton = new RadioButton(vertex);
+            radioButton.setToggleGroup(toggleGroup);
+            root.getChildren().add(radioButton);
         }
 
-        // Agregar 50 aristas de manera aleatoria
-        for (int i = 0; i < 50; i++) {
-            int sourceVertex = (int) (Math.random() * 50) + 1;
-            int destinationVertex = (int) (Math.random() * 50) + 1;
-            int weight = (int) (Math.random() * 10) + 1; // Peso aleatorio entre 1 y 10
+        // Dibujar las aristas del árbol de recubrimiento mínimo
+        for (Map.Entry<String, String> entry : primResult.entrySet()) {
+            String sourceVertex = entry.getKey();
+            String destinationVertex = entry.getValue();
 
-            adjacencyMatrixGraph.addEdge("V" + sourceVertex, "V" + destinationVertex, weight);
+            // Encuentra los RadioButtons correspondientes a los vértices de la arista
+            RadioButton sourceButton = findButton(root, sourceVertex);
+            RadioButton destinationButton = findButton(root, destinationVertex);
+
+            // Dibujar la arista entre los RadioButtons
+            // Aquí podrías dibujar una línea, unir los vértices visualmente, etc.
         }
 
-        // Imprimir vértices y aristas (solo para verificación)
-        System.out.println("Vertices: " + adjacencyMatrixGraph.getVertices());
-        System.out.println("Aristas: " + adjacencyMatrixGraph);
-
-        /*
-        *
-        *
-        * */
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("labyrinth.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 640, 480);
-        // stage es la ventana del sistema operativo
-        stage.setTitle("Hello World!");
+        Scene scene = new Scene(root,800, 600);
+        stage.setTitle("Labyrinth Visualization");
         stage.setScene(scene);
         stage.show();
     }
 
-
+    private RadioButton findButton(Pane root, String vertex) {
+        return (RadioButton) root.getChildren().stream()
+                .filter(node -> node instanceof RadioButton && ((RadioButton) node).getText().equals(vertex))
+                .findFirst()
+                .orElse(null);
+    }
     public static void main(String[] args) {
         launch(args);
     }
