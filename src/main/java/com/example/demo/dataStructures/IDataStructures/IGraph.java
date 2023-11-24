@@ -1,25 +1,33 @@
 package com.example.demo.dataStructures.IDataStructures;
 
-import com.example.demo.dataStructures.Edge;
+import com.example.demo.dataStructures.GenericMatrix;
 import com.example.demo.dataStructures.Pair;
+import com.example.demo.dataStructures.Vertex;
+import com.example.demo.dataStructures.exception.EdgeNotFoundException;
+import com.example.demo.dataStructures.exception.ExistenceVertexException;
+import com.example.demo.dataStructures.exception.VertexNotFoundException;
 
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
 
-public interface IGraph<T> {
-    void addVertex(T vertex);
-    void addEdge(T source, T destination, int weight);
-    List<T> getVertices();
-    List<T> getNeighbors(T vertex);
-    List<T> bfs(T start);
-    void dfs(T start);
-    void removeVertex(T value);
-    void removeEdge(T source, T destination);
-    void clear();
-    Map<T, Pair<Integer, T>> dijkstra(T start);
-    Map<T, Map<T, Integer>> floydWarshall();
-    Map<T, T> primMST();
-    List<Edge<T>> kruskalMST();
+public interface IGraph<V> {
+    void addVertex(V value) throws ExistenceVertexException;
 
-    int getEdgeWeight(T a, T b);
+    void deleteVertex(V value) throws VertexNotFoundException;
+
+    void addEdge(V source, V destination, int weight) throws Exception;
+
+    void removeEdge(V source, V destination, int weight) throws VertexNotFoundException, EdgeNotFoundException;
+
+    void BFS(V value) throws VertexNotFoundException;
+
+    void DFS();
+
+    Pair<ArrayList<Vertex<V>>, ArrayList<Integer>> dijkstra(V source) throws VertexNotFoundException;
+
+    Pair<int[][], GenericMatrix<V>> floydWarshall();
+
+    Pair<ArrayList<Vertex<V>>, ArrayList<Integer>> prim();
+
+    ArrayList<Pair<Pair<Vertex<V>,Vertex<V>>,Integer>> kruskal();
+
 }

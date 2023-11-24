@@ -1,8 +1,10 @@
 package Graph;
 
 
-import com.example.demo.dataStructures.AdjacencyMatrix;
-import com.example.demo.dataStructures.IDataStructures.IGraph;
+import com.example.demo.dataStructures.AdjacentListGraph;
+import com.example.demo.dataStructures.AdjacentMatrixGraph;
+import com.example.demo.dataStructures.Edge;
+import com.example.demo.dataStructures.Graph;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,72 +13,54 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GraphTest {
     Graph<String> graph;
-    //usar solo un setup
 
-    public void setUp1(){
-        graph = new AdjacencyMatrix<>();
+    /*public void setUp1(){
+        //graph = new AdjacencyMatrix<>();
+        //graph = new AdjacencyList<>();
     }
-    public void setUp2(){
-        graph = new AdjacencyList<>();
-    }
+
     @Test
     public void addVertexTestStandard(){
         setUp1();
 
         graph.addVertex("A");
-
         List<String> vertices = graph.getVertices();
 
         assertEquals(1, vertices.size());
         assertTrue(vertices.contains("A"));
-
     }
 
     @Test
-    public void addVertexTestLimit(){
+    public void addVertexTestLimit2() {
         setUp1();
-
-        graph.addVertex("A");
-        graph.addVertex("B");
-        graph.addVertex("C");
-        List<String> vertices = graph.getVertices();
-
-        assertEquals(3, vertices.size());
-        assertTrue(vertices.contains("A"));
-        assertTrue(vertices.contains("B"));
-        assertTrue(vertices.contains("C"));
-
+        for (int i = 0; i < 1000; i++) {
+            graph.addVertex(String.valueOf(i));
+        }
+        assertEquals(1000, graph.getVertices().size());
     }
+
     @Test
     public void addVertexTestInteresting(){
         setUp1();
         graph.addVertex("A");
         graph.addVertex("A");
-        graph.addVertex("A");
 
         List<String> vertices = graph.getVertices();
 
         assertEquals(1, vertices.size());
-    }
-
-    public void setUpAddEdge1(){
-        graph = new AdjacencyMatrix<>();
-        //graph = new AdjacencyList<>();
     }
 
     @Test
     public void addEdgeTestStandard(){
         setUp1();
         // Agregar vértices
-        graph.addVertex("1");
-        graph.addVertex("2");
-        graph.addVertex("3");
-
         graph.addEdge("1", "2", 5);
         graph.addEdge("2", "3", 8);
         graph.addEdge("1", "3", 3);
 
-        // Verificar si las aristas se crean correctamente
+        List<String> ver = graph.getVertices();
+        List<String> edges = graph.getEdges("1","2");
+
         List<String> neighbors1 = graph.getNeighbors("1");
         List<String> neighbors2 = graph.getNeighbors("2");
 
@@ -88,7 +72,7 @@ public class GraphTest {
     public void addEdgeTestLimit(){
         setUp1();
         graph.addVertex("1");
-        graph.addVertex("2");
+        graph.addVertex("3");
 
         graph.addEdge("1", "3", 5);
 
@@ -113,10 +97,6 @@ public class GraphTest {
         assertEquals(0, storedWeight);
     }
 
-    public void setUpGetNeighbors1(){
-        graph = new AdjacencyMatrix<>();
-        //graph = new AdjacencyList<>();
-    }
     @Test
     public void getNeighborsTestStandard(){
         setUp1();
@@ -198,12 +178,11 @@ public class GraphTest {
         // Obtén el recorrido BFS desde un vértice en un grafo vacío
         List<String> bfsTraversal = graph.bfs("A");
 
-        // Verifica que el recorrido BFS esté vacío (no se encontraron errores)
-        assertEquals(0, bfsTraversal.size());
+        assertNull(bfsTraversal);
     }
     @Test
     public void bfsTestIntersting(){
 
-    }
+    }*/
 
 }

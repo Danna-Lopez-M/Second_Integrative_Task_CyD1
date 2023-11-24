@@ -1,66 +1,32 @@
 package com.example.demo.dataStructures;
 
 import com.example.demo.dataStructures.IDataStructures.IGraph;
+import com.example.demo.dataStructures.exception.EdgeNotFoundException;
+import com.example.demo.dataStructures.exception.ExistenceVertexException;
+import com.example.demo.dataStructures.exception.VertexNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Graph<T> implements IGraph<T> {
-    @Override
-    public void addVertex(T vertex) {}
+public abstract class Graph<V> implements IGraph<V> {
+    public void addVertex(V value) throws ExistenceVertexException{}
 
-    @Override
-    public void addEdge(T source, T destination, int weight) {}
+    public void deleteVertex(V value) throws VertexNotFoundException{}
 
-    @Override
-    public List<T> getVertices() {
-        return null;
-    }
+    public void addEdge(V source, V destination, int weight) throws Exception{}
 
-    @Override
-    public List<T> getNeighbors(T  vertex) {
-        return null;
-    }
+    public void removeEdge(V source, V destination, int weight) throws VertexNotFoundException, EdgeNotFoundException{}
 
-    @Override
-    public List<T> bfs(T start) {
-        return null;
-    }
+    public void BFS(V value) throws VertexNotFoundException{}
 
-    @Override
-    public void dfs(T start) {}
+    public void DFS(){}
 
-    @Override
-    public void removeVertex(T value) {}
+    public Pair<ArrayList<Vertex<V>>, ArrayList<Integer>> dijkstra(V source) throws VertexNotFoundException{}
 
-    @Override
-    public void removeEdge(T source, T destination) {}
+    public Pair<int[][], GenericMatrix<V>> floydWarshall(){}
 
-    @Override
-    public void clear() {}
+    public Pair<ArrayList<Vertex<V>>, ArrayList<Integer>> prim(){}
 
-    @Override
-    public Map<T, Pair<Integer, T>> dijkstra(T start) {
-        return null;
-    }
-
-    @Override
-    public Map<T, Map<T, Integer>> floydWarshall() {
-        return null;
-    }
-
-    @Override
-    public Map<T, T> primMST() {
-        return null;
-    }
-
-    @Override
-    public List<Edge<T>> kruskalMST() {
-        return null;
-    }
-
-    @Override
-    public int getEdgeWeight(T a, T b) {
-        return 0;
-    }
+    public ArrayList<Pair<Pair<Vertex<V>,Vertex<V>>,Integer>> kruskal(){}
 }

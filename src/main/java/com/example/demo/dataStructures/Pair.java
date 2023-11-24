@@ -1,29 +1,29 @@
 package com.example.demo.dataStructures;
 
-public class Pair<T1, T2> {
+import java.util.ArrayList;
 
-    private T1 first;
-    private T2 second;
+public class Pair<V,T>{
+    private V value1;
+    private T value2;
 
-    public Pair(T1 first, T2 second) {
-        this.first = first;
-        this.second = second;
+    public Pair(V value1,T value2){
+        this.value1 = value1;
+        this.value2 = value2;
     }
 
-    public T1 getFirst() {
-        return first;
+    public V getValue1() {
+        return value1;
     }
 
-    public void setFirst(T1 first) {
-        this.first = first;
+    public void setValue1(V value1) {
+        this.value1 = value1;
     }
 
-    public T2 getSecond() {
-        return second;
+    public T getValue2() {
+        return value2;
     }
 
-    public void setSecond(T2 second) {
-        this.second = second;
+    public void setValue2(T value2) {
+        this.value2 = value2;
     }
-
 }
