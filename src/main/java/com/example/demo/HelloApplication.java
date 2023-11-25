@@ -104,8 +104,8 @@ public class HelloApplication extends Application {
             root.getChildren().add(radioButton);
 
             // Calcular las coordenadas para formar una cuadrícula
-            double col = (i) % NUM_COLS;
-            double row = (i) / NUM_COLS;
+            double col = (i - 1) % NUM_COLS;
+            double row = (i - 1) / NUM_COLS;
 
             double x = col * DISTANCE_X;
             double y = row * DISTANCE_Y;
@@ -117,24 +117,22 @@ public class HelloApplication extends Application {
             radioButton.setOnAction(event -> handleRadioButtonClick(radioButton));
         }
 
-        //redRectangle = new Rectangle(20, 20, Color.RED); // Puedes ajustar el tamaño y color
-        //root.getChildren().add(redRectangle);
-
 
         drawConnectionLines(root, nodeMap);
 
         rectanglePlayer = new Rectangle(20, 20, Color.RED);
-        //root.getChildren().add(rectanglePlayer);
-        //addRectangleAtVertex(1, root, rectanglePlayer);
+        root.getChildren().add(rectanglePlayer);
+        addRectangleAtVertex(1, root, rectanglePlayer);
         // Configurar y mostrar la ventana
         stage.setTitle("Graph Visualization");
         stage.setScene(scene);
         stage.show();
     }
-    private void generateConnections() {
-        System.out.println("generar conexiones..");
-        while (!graph.dijkstra(1).containsKey(50)) {
-            System.out.println("no hay dijkstra...");
+    public void generateConnections() {
+        if(graph.bfs(1).contains(50)) return;
+        int numConnections = 0;
+        // verificar que haya un camino
+        while (!graph.bfs(1).contains(50)) {
             int source = (int) (Math.random() * 51);
             int target;
 
@@ -145,9 +143,9 @@ public class HelloApplication extends Application {
             int weight = (int) (Math.random() * 7) + 1;
 
             graph.addEdge(source, target, weight);
-            System.out.println("source: " + source + "target" + target);
+            numConnections++;
+            //System.out.println("Connection added: " + source + " -> " + target);
         }
-        System.out.println(graph.dijkstra(1));
     }
 
 
@@ -210,12 +208,14 @@ public class HelloApplication extends Application {
 
     private void addRectangleAtVertex(int targetVertex, Group root, Rectangle rectangle) {
 
+        System.out.println("target vertex: " + targetVertex);
         for (Node node : root.getChildren()) {
             if (node instanceof RadioButton) {
                 RadioButton radioButton = (RadioButton) node;
                 int vertex = Integer.parseInt(radioButton.getText());
 
-               // System.out.println("vertex: " + vertex);
+               System.out.println("currentvertex: " + vertex);
+
 
                 if (vertex == targetVertex) {
                    // System.out.println("entra");
@@ -230,5 +230,13 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public IGraph<Integer> getGraph() {
+        return graph;
+    }
+
+    public void setGraph(IGraph<Integer> graph) {
+        this.graph = graph;
     }
 }
