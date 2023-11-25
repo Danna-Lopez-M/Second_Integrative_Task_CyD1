@@ -117,15 +117,12 @@ public class HelloApplication extends Application {
             radioButton.setOnAction(event -> handleRadioButtonClick(radioButton));
         }
 
-        //redRectangle = new Rectangle(20, 20, Color.RED); // Puedes ajustar el tamaño y color
-        //root.getChildren().add(redRectangle);
-
 
         drawConnectionLines(root, nodeMap);
 
         rectanglePlayer = new Rectangle(20, 20, Color.RED);
-        //root.getChildren().add(rectanglePlayer);
-        //addRectangleAtVertex(1, root, rectanglePlayer);
+        root.getChildren().add(rectanglePlayer);
+        addRectangleAtVertex(1, root, rectanglePlayer);
         // Configurar y mostrar la ventana
         stage.setTitle("Graph Visualization");
         stage.setScene(scene);
@@ -133,8 +130,11 @@ public class HelloApplication extends Application {
     }
     private void generateConnections() {
         System.out.println("generar conexiones..");
-        while (!graph.dijkstra(1).containsKey(50)) {
-            System.out.println("no hay dijkstra...");
+        System.out.println(graph.getVertices());
+        System.out.println(graph.dijkstra(1).containsKey(50));
+        System.out.println("bfs:"+graph.bfs(1).contains(50));
+        while (!graph.bfs(1).contains(50)) {
+            System.out.println("generar edges...");
             int source = (int) (Math.random() * 51);
             int target;
 
@@ -210,12 +210,14 @@ public class HelloApplication extends Application {
 
     private void addRectangleAtVertex(int targetVertex, Group root, Rectangle rectangle) {
 
+        System.out.println("target vertex: " + targetVertex);
         for (Node node : root.getChildren()) {
             if (node instanceof RadioButton) {
                 RadioButton radioButton = (RadioButton) node;
                 int vertex = Integer.parseInt(radioButton.getText());
 
-               // System.out.println("vertex: " + vertex);
+               System.out.println("currentvertex: " + vertex);
+
 
                 if (vertex == targetVertex) {
                    // System.out.println("entra");
