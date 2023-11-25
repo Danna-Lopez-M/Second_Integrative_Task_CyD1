@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.control.GraphController;
 import com.example.demo.dataStructures.AdjacencyList;
 import com.example.demo.dataStructures.AdjacencyMatrix;
 import com.example.demo.dataStructures.Graph;
@@ -14,6 +15,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.*;
@@ -21,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javafx.scene.paint.Color;
@@ -42,6 +45,7 @@ public class HelloApplication extends Application {
     private int currentVertex = 1;
     private Rectangle rectanglePlayer;
     private int resistencia = 100;
+    private Label resultLabel;
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Graph Selection");
@@ -82,19 +86,18 @@ public class HelloApplication extends Application {
         primaryStage.show();
     }
     public void startGraphVisualization(Stage stage) {
-        // Instancia de grafo utilizando lista de adyacencia
-        //IGraph<String> graph = new AdjacencyList<>();
-        //graph = new AdjacencyMatrix<>();
-
         // Agregar 50 vértices
         for (int i = 1; i <= 50; i++) {
             graph.addVertex(i);
         }
 
+        generateConnections(1, 50);
 
-        generateConnections();
+        GraphController graphController = new GraphController(graph);
 
-
+        System.out.println("minimum path: ");
+        System.out.println(graphController.minimumPath(1, 50));
+        List<Integer> minimumPath = graphController.minimumPath(1, 50);
         root = new Group();
         Scene scene = new Scene(root, 800, 600);
 
@@ -121,19 +124,38 @@ public class HelloApplication extends Application {
 
         drawConnectionLines(root, nodeMap);
 
+        // rectangulo del jugador
         rectanglePlayer = new Rectangle(20, 20, Color.RED);
         root.getChildren().add(rectanglePlayer);
         addRectangleAtVertex(1, root, rectanglePlayer);
+
+        // mostrar el camino minimo:
+        Button showPathButton = new Button("Ver el camino mínimo hacia la salida");
+        showPathButton.setOnAction(event -> showMinimumPath(minimumPath));
+        root.getChildren().add(showPathButton);
+
+        // Etiqueta para mostrar el resultado
+        resultLabel = new Label();
+        root.getChildren().add(resultLabel);
+
+        showPathButton.setLayoutX(400);
+        showPathButton.setLayoutY(500);
+
+        resultLabel.setLayoutX(400);
+        resultLabel.setLayoutY(550);
+
         // Configurar y mostrar la ventana
         stage.setTitle("Graph Visualization");
         stage.setScene(scene);
         stage.show();
     }
-    public void generateConnections() {
-        if(graph.bfs(1).contains(50)) return;
+    public void generateConnections(int start, int end) {
+        if (!graph.getVertices().contains(start) || !graph.getVertices().contains(end)) return;
+        if(graph.bfs(start).contains(end)) return;
+
         int numConnections = 0;
-        // verificar que haya un camino
-        while (!graph.bfs(1).contains(50)) {
+        // verificar que haya un c
+        while (!graph.bfs(start).contains(end)) {
             int source = (int) (Math.random() * 51);
             int target;
 
@@ -229,6 +251,15 @@ public class HelloApplication extends Application {
     }
 
 
+    private void showMinimumPath(List<Integer> minimumPath) {
+
+        // Mostrar el contenido del camino mínimo en la etiqueta
+        if (minimumPath != null) {
+            resultLabel.setText("Camino mínimo hacia la salida: " + minimumPath);
+        } else {
+            resultLabel.setText("No hay camino mínimo hacia la salida.");
+        }
+    }
     public static void main(String[] args) {
         launch(args);
     }
