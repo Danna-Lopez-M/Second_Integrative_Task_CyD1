@@ -9,4 +9,5 @@
 
 * Adjacency matrix and Adjacency list graph implementations compatibility
 * Labyrinth generation using BFS
+* player movement using BFS
 * Show minimum path to exit using Dijkstra
