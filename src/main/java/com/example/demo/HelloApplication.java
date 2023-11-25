@@ -4,6 +4,8 @@ import com.example.demo.dataStructures.AdjacencyList;
 import com.example.demo.dataStructures.AdjacencyMatrix;
 import com.example.demo.dataStructures.IDataStructures.IGraph;
 import com.example.demo.dataStructures.Pair;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -13,7 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,8 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.control.ChoiceBox;
+import javafx.util.Duration;
 
 public class HelloApplication extends Application {
     private static final double NODE_SIZE = 20.0;
@@ -84,12 +86,12 @@ public class HelloApplication extends Application {
         //graph = new AdjacencyMatrix<>();
 
         // Agregar 50 vértices
-        for (int i = 0; i <= 49; i++) {
+        for (int i = 1; i <= 50; i++) {
             graph.addVertex(i);
         }
 
 
-        generateConnections(49, 1);
+        generateConnections();
 
 
         root = new Group();
@@ -98,12 +100,12 @@ public class HelloApplication extends Application {
         Map<Integer, RadioButton> nodeMap = new HashMap<>();
         for (int i = 1; i <= NUM_ROWS * NUM_COLS; i++) {
             RadioButton radioButton = new RadioButton(String.valueOf(i));
-            nodeMap.put(i - 1, radioButton);
+            nodeMap.put(i, radioButton);
             root.getChildren().add(radioButton);
 
             // Calcular las coordenadas para formar una cuadrícula
-            double col = (i - 1) % NUM_COLS;
-            double row = (i - 1) / NUM_COLS;
+            double col = (i) % NUM_COLS;
+            double row = (i) / NUM_COLS;
 
             double x = col * DISTANCE_X;
             double y = row * DISTANCE_Y;
@@ -129,31 +131,33 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    private void generateConnections(int numConnections, int n){
+    private void generateConnections() {
+        System.out.println("generar conexiones..");
+        while (!graph.dijkstra(1).containsKey(50)) {
+            System.out.println("no hay dijkstra...");
+            int source = (int) (Math.random() * 51);
+            int target;
 
-        for (int i = 0; i <= numConnections; i++) {
-            graph.addEdge(((int) (Math.random() * 50)), (int) (Math.random() * 50), (int) (Math.random() * 7) + 1);
+            do {
+                target = (int) (Math.random() * 51);
+            } while (source == target);
+
+            int weight = (int) (Math.random() * 7) + 1;
+
+            graph.addEdge(source, target, weight);
+            System.out.println("source: " + source + "target" + target);
         }
-       Map<Integer, Pair<Integer, Integer>> dijsktraResult = graph.dijkstra(0);
-         /*for (int elem:
-             dijsktraResult.keySet()) {
-            System.out.println(elem);
-        }*/
-        if(dijsktraResult.containsKey(49)){
-            System.out.println(dijsktraResult);
-            return;
-        }else {
-            generateConnections((numConnections / n+1), n + 2);
-        }
+        System.out.println(graph.dijkstra(1));
     }
+
 
     private void drawConnectionLines(Group group, Map<Integer, RadioButton> nodeMap) {
         int size = graph.getVertices().size();
 
-        System.out.println("size: " + size);
+       // System.out.println("size: " + size);
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        for (int i = 1; i <= size; i++) {
+            for (int j = 1; j <= size; j++) {
                 if (graph.getEdgeWeight(i, j) != -1) {
                     RadioButton node1 = nodeMap.get(i);
                     RadioButton node2 = nodeMap.get(j);
@@ -209,12 +213,12 @@ public class HelloApplication extends Application {
         for (Node node : root.getChildren()) {
             if (node instanceof RadioButton) {
                 RadioButton radioButton = (RadioButton) node;
-                int vertex = Integer.parseInt(radioButton.getText()) - 1;
+                int vertex = Integer.parseInt(radioButton.getText());
 
-                System.out.println("vertex: " + vertex);
+               // System.out.println("vertex: " + vertex);
 
                 if (vertex == targetVertex) {
-                    System.out.println("entra");
+                   // System.out.println("entra");
                     rectangle.setLayoutX(radioButton.getLayoutX());
                     rectangle.setLayoutY(radioButton.getLayoutY());
                 }
