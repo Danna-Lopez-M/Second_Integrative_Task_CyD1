@@ -2,6 +2,7 @@ package com.example.demo;
 
 import com.example.demo.dataStructures.AdjacencyList;
 import com.example.demo.dataStructures.AdjacencyMatrix;
+import com.example.demo.dataStructures.Graph;
 import com.example.demo.dataStructures.IDataStructures.IGraph;
 import com.example.demo.dataStructures.Pair;
 import javafx.animation.PathTransition;
@@ -29,7 +30,7 @@ import javafx.util.Duration;
 public class HelloApplication extends Application {
     private static final double NODE_SIZE = 20.0;
     private  Rectangle redRectangle;
-    private IGraph<Integer> graph;
+    private Graph<Integer> graph;
     private static final double BUTTON_SIZE = 20.0;
     private static final int NUM_ROWS = 5;
     private static final int NUM_COLS = 10;
@@ -232,11 +233,11 @@ public class HelloApplication extends Application {
         launch(args);
     }
 
-    public IGraph<Integer> getGraph() {
+    public Graph<Integer> getGraph() {
         return graph;
     }
 
-    public void setGraph(IGraph<Integer> graph) {
+    public void setGraph(Graph<Integer> graph) {
         this.graph = graph;
     }
 }
