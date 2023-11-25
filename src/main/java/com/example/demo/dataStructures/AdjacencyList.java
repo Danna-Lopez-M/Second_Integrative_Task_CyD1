@@ -1,8 +1,5 @@
 package com.example.demo.dataStructures;
 
-
-import com.example.demo.dataStructures.IDataStructures.IGraph;
-
 import java.util.*;
 
 public class AdjacencyList<T extends Comparable<T>> extends Graph<T> {
@@ -71,11 +68,12 @@ public class AdjacencyList<T extends Comparable<T>> extends Graph<T> {
         return bfs;
     }
 
-    public void dfs(T start) {
+    public List<T> dfs(T start) {
         if (!map.containsKey(start))
-            return;
+            return Collections.emptyList();
         Map<T, Boolean> visited = new HashMap<>();
         Stack<Node<T>> stack = new Stack<>();
+        ArrayList<T> nodes = new ArrayList<>();
 
         Node<T> startNode = map.get(start);
         stack.push(startNode);
@@ -86,7 +84,7 @@ public class AdjacencyList<T extends Comparable<T>> extends Graph<T> {
                 continue;
 
             visited.put(currentNode.getValue(), true);
-            System.out.print(currentNode.getValue() + " ");
+            nodes.add(currentNode.getValue());
 
             for (Edge<T> neighbor : currentNode.getEdges()) {
                 if (!visited.containsKey(neighbor.getNode().getValue())) {
@@ -94,6 +92,7 @@ public class AdjacencyList<T extends Comparable<T>> extends Graph<T> {
                 }
             }
         }
+        return nodes;
     }
 
     public List<T> getVertices() {

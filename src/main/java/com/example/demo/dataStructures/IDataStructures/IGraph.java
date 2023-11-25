@@ -12,7 +12,7 @@ public interface IGraph<T> {
     List<T> getVertices();
     List<T> getNeighbors(T vertex);
     List<T> bfs(T start);
-    void dfs(T start);
+    List<T> dfs(T start);
     void removeVertex(T value);
     void removeEdge(T source, T destination);
     void clear();

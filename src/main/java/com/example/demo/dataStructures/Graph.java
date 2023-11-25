@@ -28,7 +28,7 @@ public abstract class Graph<T> implements IGraph<T> {
     }
 
     @Override
-    public void dfs(T start) {}
+    public List<T> dfs(T start) {return null;}
 
     @Override
     public void removeVertex(T value) {}

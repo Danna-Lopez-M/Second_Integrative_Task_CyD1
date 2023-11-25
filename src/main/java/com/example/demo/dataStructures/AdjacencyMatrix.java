@@ -1,8 +1,6 @@
 package com.example.demo.dataStructures;
 
 
-import com.example.demo.dataStructures.IDataStructures.IGraph;
-
 import java.util.*;
 
 public class AdjacencyMatrix<T> extends Graph<T> {
@@ -63,12 +61,13 @@ public class AdjacencyMatrix<T> extends Graph<T> {
         return bfs;
     }
 
-    public void dfs(T start) {
+    public List<T> dfs(T start) {
         if (!map.containsKey(start))
-            return;
+            return Collections.emptyList();
         Map<T, Boolean> visited = new HashMap<>();
         Stack<T> stack = new Stack<>();
         stack.push(start);
+        ArrayList<T> nodes = new ArrayList<>();
 
         while (!stack.isEmpty()) {
             T currentNode = stack.pop();
@@ -76,7 +75,7 @@ public class AdjacencyMatrix<T> extends Graph<T> {
                 continue;
 
             visited.put(currentNode, true);
-            System.out.print(currentNode + " ");
+            nodes.add(currentNode);
             Set<T> edges = map.get(currentNode).keySet();
             for (T neighbor : edges) {
                 if (!visited.containsKey(neighbor)) {
@@ -84,6 +83,7 @@ public class AdjacencyMatrix<T> extends Graph<T> {
                 }
             }
         }
+        return nodes;
     }
 
     public List<T> getVertices() {
