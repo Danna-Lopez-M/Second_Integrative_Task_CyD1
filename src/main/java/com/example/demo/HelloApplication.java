@@ -3,13 +3,16 @@ package com.example.demo;
 import com.example.demo.dataStructures.AdjacencyList;
 import com.example.demo.dataStructures.AdjacencyMatrix;
 import com.example.demo.dataStructures.IDataStructures.IGraph;
+import com.example.demo.dataStructures.Pair;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
@@ -17,115 +20,110 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.control.ChoiceBox;
 
 public class HelloApplication extends Application {
     private static final double NODE_SIZE = 20.0;
     private  Rectangle redRectangle;
     private IGraph<Integer> graph;
-
+    private static final double BUTTON_SIZE = 20.0;
     private static final int NUM_ROWS = 5;
     private static final int NUM_COLS = 10;
-    private static final double BUTTON_SIZE = 20.0;
-    private static final double DISTANCE_X = 30.0;
-    private static final double DISTANCE_Y = 30.0;
+    private static final double DISTANCE_X = 800.0 / NUM_COLS;
+    private static final double DISTANCE_Y = 600.0 / NUM_ROWS;
+
+    private Group root;
+
+    private int currentVertex = 1;
+    private Rectangle rectanglePlayer;
+    private int resistencia = 100;
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Graph Selection");
+
+        VBox vbox = new VBox(20);
+        vbox.setStyle("-fx-padding: 10;");
+
+        ChoiceBox<String> graphTypeChoiceBox = new ChoiceBox<>(
+                FXCollections.observableArrayList("Adjacency List", "Adjacency Matrix"));
+        graphTypeChoiceBox.getSelectionModel().selectFirst();
+        graph = new AdjacencyList<>();
+
+        Button startButton = new Button("Start Visualization");
+        //startButton.setDisable(true);
+
+        graphTypeChoiceBox.getSelectionModel().selectedItemProperty().addListener(
+                (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+                    startButton.setDisable(false);
+                    // Selecciona la implementación del grafo según la elección del usuario
+                    if (newValue.equals("Adjacency List")) {
+                        graph = new AdjacencyList<>();
+                        System.out.println("adjacency list selected");
+                    } else if (newValue.equals("Adjacency Matrix")) {
+                        graph = new AdjacencyMatrix<>();
+                        System.out.println("adjacency matrix selected");
+                    }
+                });
+
+        startButton.setOnAction(e -> {
+            primaryStage.hide();
+            Stage newStage = new Stage();
+            startGraphVisualization(newStage);
+        });
+
+        vbox.getChildren().addAll(graphTypeChoiceBox, startButton);
+
+        primaryStage.setScene(new Scene(vbox, 300, 150));
+        primaryStage.show();
+    }
+    public void startGraphVisualization(Stage stage) {
         // Instancia de grafo utilizando lista de adyacencia
         //IGraph<String> graph = new AdjacencyList<>();
-        graph = new AdjacencyMatrix<>();
+        //graph = new AdjacencyMatrix<>();
 
         // Agregar 50 vértices
         for (int i = 0; i <= 49; i++) {
             graph.addVertex(i);
         }
 
-/*// Conectar todos los vértices entre sí
-        for (int i = 1; i <= 50; i++) {
-            for (int j = i + 1; j <= 50; j++) {
-                int weight = (int) (Math.random() * 10) + 1; // Peso aleatorio entre 1 y 10
-                graph.addEdge("V" + i, "V" + j, weight);
-                graph.addEdge("V" + j, "V" + i, weight); // Asegurar conexión bidireccional
-            }
-        }*/
 
         generateConnections(49, 1);
 
 
-
-
-
-
-
-       /* // Aplicar el algoritmo de Prim
-        Map<String, String> primResult = graph.primMST();*/
-
-        // Crear una escena
-        Group root = new Group();
+        root = new Group();
         Scene scene = new Scene(root, 800, 600);
-
-
-    /*    Map<Integer, RadioButton> nodeMap = new HashMap<>();
-        for (Integer vertex : graph.getVertices()) {
-            RadioButton radioButton = new RadioButton(String.valueOf(vertex));
-            nodeMap.put(vertex, radioButton);
-            root.getChildren().add(radioButton);
-        }*/
 
         Map<Integer, RadioButton> nodeMap = new HashMap<>();
         for (int i = 1; i <= NUM_ROWS * NUM_COLS; i++) {
             RadioButton radioButton = new RadioButton(String.valueOf(i));
-            nodeMap.put(i, radioButton);
+            nodeMap.put(i - 1, radioButton);
             root.getChildren().add(radioButton);
 
             // Calcular las coordenadas para formar una cuadrícula
-            double x = (i - 1) % NUM_COLS * DISTANCE_X;
-            double y = (i - 1) / NUM_COLS * DISTANCE_Y;
+            double col = (i - 1) % NUM_COLS;
+            double row = (i - 1) / NUM_COLS;
+
+            double x = col * DISTANCE_X;
+            double y = row * DISTANCE_Y;
 
             radioButton.setLayoutX(x);
             radioButton.setLayoutY(y);
+
+            // Manejar el evento de clic en el RadioButton
+            radioButton.setOnAction(event -> handleRadioButtonClick(radioButton));
         }
 
-/*        for (String vertex : graph.getVertices()) {
-            RadioButton radioButton = nodeMap.get(vertex);
+        //redRectangle = new Rectangle(20, 20, Color.RED); // Puedes ajustar el tamaño y color
+        //root.getChildren().add(redRectangle);
 
-            String parentVertex = primResult.get(vertex);
-            if (parentVertex != null) {
-                RadioButton parentRadioButton = nodeMap.get(parentVertex);
 
-                // Posicionar el RadioButton actual al lado del padre y evitar superposiciones
-                positionNodeAvoidOverlap(radioButton, parentRadioButton);
-            } else {
-                // Si no tiene padre, colócalo en una posición inicial y evita superposiciones
-                positionNodeAvoidOverlap(radioButton, null);
-            }
-        }*/
-        // Dibujar líneas de conexión
-     /*   for (Map.Entry<String, String> entry : primResult.entrySet()) {
-            String vertex = entry.getKey();
-            String parentVertex = entry.getValue();
+        drawConnectionLines(root, nodeMap);
 
-            if (parentVertex != null) {
-                RadioButton node = nodeMap.get(vertex);
-                RadioButton parentNode = nodeMap.get(parentVertex);
-
-                // Dibujar línea de conexión
-                drawConnectionLine(root, node, parentNode);
-            }
-        }*/
-
-        redRectangle = new Rectangle(20, 20, Color.RED); // Puedes ajustar el tamaño y color
-        root.getChildren().add(redRectangle);
-        // Encontrar el RadioButton más a la izquierda y más abajo
-        //RadioButton leftmostDownmostButton = findLeftmostDownmostButton(root);
-        //redRectangle.setLayoutX(leftmostDownmostButton.getLayoutX());
-        //redRectangle.setLayoutY(leftmostDownmostButton.getLayoutY());
-
-        //addClickHandlers(root, nodeMap, primResult, redRectangle);
-
+        rectanglePlayer = new Rectangle(20, 20, Color.RED);
+        //root.getChildren().add(rectanglePlayer);
+        //addRectangleAtVertex(1, root, rectanglePlayer);
         // Configurar y mostrar la ventana
         stage.setTitle("Graph Visualization");
         stage.setScene(scene);
@@ -134,23 +132,48 @@ public class HelloApplication extends Application {
     private void generateConnections(int numConnections, int n){
 
         for (int i = 0; i <= numConnections; i++) {
-            graph.addEdge(((int) (Math.random() * 49) ), (int) (Math.random() * 49), (int) (Math.random() * 7) + 1);
+            graph.addEdge(((int) (Math.random() * 50)), (int) (Math.random() * 50), (int) (Math.random() * 7) + 1);
         }
-        if(graph.dijkstra(0).containsKey(49)){
+       Map<Integer, Pair<Integer, Integer>> dijsktraResult = graph.dijkstra(0);
+         /*for (int elem:
+             dijsktraResult.keySet()) {
+            System.out.println(elem);
+        }*/
+        if(dijsktraResult.containsKey(49)){
+            System.out.println(dijsktraResult);
             return;
         }else {
-            generateConnections((numConnections / n), n + 1);
+            generateConnections((numConnections / n+1), n + 2);
         }
     }
-    /*private void drawConnectionLine(Group group, RadioButton source, RadioButton destination) {
-        Line line = new Line();
-        line.setStroke(Color.BLACK);
-        line.setStrokeWidth(0.5);
 
-        double startX = source.getLayoutX() + NODE_SIZE / 2;
-        double startY = source.getLayoutY() + NODE_SIZE / 2;
-        double endX = destination.getLayoutX() + NODE_SIZE / 2;
-        double endY = destination.getLayoutY() + NODE_SIZE / 2;
+    private void drawConnectionLines(Group group, Map<Integer, RadioButton> nodeMap) {
+        int size = graph.getVertices().size();
+
+        System.out.println("size: " + size);
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (graph.getEdgeWeight(i, j) != -1) {
+                    RadioButton node1 = nodeMap.get(i);
+                    RadioButton node2 = nodeMap.get(j);
+
+                    if (node1 != null && node2 != null) {
+                        drawConnectionLine(group, node1, node2);
+                    }
+                }
+            }
+        }
+    }
+
+    private void drawConnectionLine(Group group, RadioButton source, RadioButton destination) {
+        Line line = new Line();
+        line.setStrokeWidth(1.5);
+
+        double startX = source.getLayoutX() + BUTTON_SIZE / 2;
+        double startY = source.getLayoutY() + BUTTON_SIZE / 2;
+        double endX = destination.getLayoutX() + BUTTON_SIZE / 2;
+        double endY = destination.getLayoutY() + BUTTON_SIZE / 2;
 
         line.setStartX(startX);
         line.setStartY(startY);
@@ -158,102 +181,48 @@ public class HelloApplication extends Application {
         line.setEndY(endY);
 
         group.getChildren().add(line);
-    }*/
-
-  /*  private RadioButton findButton(Group root, String vertex) {
-        return (RadioButton) root.getChildren().stream()
-                .filter(node -> node instanceof RadioButton && ((RadioButton) node).getText().equals(vertex))
-                .findFirst()
-                .orElse(null);
-    }*/
- /*   private void positionNodeAvoidOverlap(RadioButton node, RadioButton parent) {
-        double x = Math.random() * 700;
-        double y = Math.random() * 500;
-
-        if (parent != null) {
-            double parentX = parent.getLayoutX();
-            double parentY = parent.getLayoutY();
-
-            // Evitar superposición
-            while (Math.abs(x - parentX) < NODE_SIZE || Math.abs(y - parentY) < NODE_SIZE) {
-                x = Math.random() * 700;
-                y = Math.random() * 500;
-            }
-        }
-
-        node.setLayoutX(x);
-        node.setLayoutY(y);
-    }*/
-
-/*    private RadioButton findLeftmostDownmostButton(Group root) {
-        double minX = Double.MAX_VALUE;
-        double minY = Double.MAX_VALUE;
-        RadioButton leftmostDownmostButton = null;
-
-        for (Node node : root.getChildren()) {
-            if (node instanceof RadioButton) {
-                RadioButton radioButton = (RadioButton) node;
-                double x = radioButton.getLayoutX();
-                double y = radioButton.getLayoutY();
-
-                if (x < minX || (x == minX && y > minY)) {
-                    minX = x;
-                    minY = y;
-                    leftmostDownmostButton = radioButton;
-                }
-            }
-        }
-
-        return leftmostDownmostButton;
-    }*/
-    // pasarle lo que estoy haciendo aqui a chat: por que me esta tomando que todos los vertices estan conectados con el vertice actual? no
-    // puede ser asi...
- /*   private void handleRadioButtonClick(Group root, RadioButton destinationRadioButton, Map<String, String> primResult, Rectangle redRectangle) {
-        double layoutX = destinationRadioButton.localToParent(destinationRadioButton.getBoundsInLocal()).getMinX();
-        double layoutY = destinationRadioButton.localToParent(destinationRadioButton.getBoundsInLocal()).getMinY();
-
-        RadioButton currentRadioButton = findRadioButtonAt(redRectangle, root);
-
-        System.out.println("(" + layoutX + "," + layoutY + ")");
-
-        // Obtener los vértices asociados a los RadioButtons
-        String vertex1 = currentRadioButton.getText();
-        String vertex2 = destinationRadioButton.getText();
-
-        if (graph.getNeighbors(vertex1).contains(vertex2)){
-            System.out.println("neighbors");
-        }else {
-            System.out.println("not connected...");
-        }
-    }*/
-/*
-    private void addClickHandlers(Group root, Map<String, RadioButton> nodeMap, Map<String, String> primResult, Rectangle redRectangle) {
-        for (RadioButton radioButton : nodeMap.values()) {
-            radioButton.setOnAction(event -> handleRadioButtonClick(root, radioButton, primResult, redRectangle));
-        }
-    }*/
-
- /*   private RadioButton findRadioButtonAt(Rectangle redRectangle, Group root) {
-        double epsilon = 0.5; // Puedes ajustar el valor de epsilon según sea necesario
-
-        for (Node node : root.getChildren()) {
-            if (node instanceof RadioButton) {
-                RadioButton radioButton = (RadioButton) node;
-
-                double nodeX = radioButton.localToParent(radioButton.getBoundsInLocal()).getMinX();
-                double nodeY = radioButton.localToParent(radioButton.getBoundsInLocal()).getMinY();
-
-                // Verificar si las coordenadas están dentro del rango epsilon
-                if (Math.abs(nodeX - redRectangle.getLayoutX()) < epsilon
-                        && Math.abs(nodeY - redRectangle.getLayoutY()) < epsilon) {
-                    return radioButton;
-                }
-            }
-        }
-
-        return null; // Si no se encuentra ningún RadioButton en esas coordenadas
     }
-*/
+
+    private void handleRadioButtonClick(RadioButton radioButton) {
+        // Obtener el vértice asociado al RadioButton
+        int vertex = Integer.parseInt(radioButton.getText());
+
+        // Hacer lo que necesites con la referencia al RadioButton y al vértice
+        System.out.println("Clic en RadioButton: " + radioButton.getText());
+        //System.out.println("Vértice asociado: " + vertex);
+
+        if (graph.bfs(currentVertex).contains(vertex)){
+            addRectangleAtVertex(vertex, this.root, rectanglePlayer);
+        }
+        resistencia = resistencia - graph.getEdgeWeight(currentVertex, vertex);
+
+        if (resistencia <= 0){
+            // generar prim o kruskal para mostrar el camino minimo
+        }else{
+            //
+            return;
+        }
+    }
+
+    private void addRectangleAtVertex(int targetVertex, Group root, Rectangle rectangle) {
+
+        for (Node node : root.getChildren()) {
+            if (node instanceof RadioButton) {
+                RadioButton radioButton = (RadioButton) node;
+                int vertex = Integer.parseInt(radioButton.getText()) - 1;
+
+                System.out.println("vertex: " + vertex);
+
+                if (vertex == targetVertex) {
+                    System.out.println("entra");
+                    rectangle.setLayoutX(radioButton.getLayoutX());
+                    rectangle.setLayoutY(radioButton.getLayoutY());
+                }
+            }
+        }
+
+    }
+
 
     public static void main(String[] args) {
         launch(args);
