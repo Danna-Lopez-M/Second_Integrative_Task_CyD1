@@ -1,22 +1,22 @@
 package com.example.demo.dataStructures;
 
-public class Edge<V> {
+public class Edge<T> {
 
-    private Vertex<V> source;
-    private Vertex<V> node;
+    private Node<T> source;
+    private Node<T> node;
     private int weight;
 
-    public Edge(Vertex<V> source, Vertex<V> neighbor, int weight) {
+    public Edge(Node<T> source, Node<T> neighbor, int weight) {
         this.source= source;
         this.node = neighbor;
         this.weight = weight;
     }
 
-    public Vertex<V> getNode() {
+    public Node<T> getNode() {
         return node;
     }
 
-    public void setNode(Vertex<V> neighbor) {
+    public void setNode(Node<T> neighbor) {
         this.node = neighbor;
     }
 
@@ -28,11 +28,11 @@ public class Edge<V> {
         this.weight = weight;
     }
 
-    public Vertex<V> getSource() {
+    public Node<T> getSource() {
         return source;
     }
 
-    public void setSource(Vertex<V> source) {
+    public void setSource(Node<T> source) {
         this.source = source;
     }
 }
