@@ -1,14 +1,12 @@
 package Graph;
 
 
-import com.example.demo.dataStructures.AdjacencyList;
-import com.example.demo.dataStructures.AdjacencyMatrix;
-import com.example.demo.dataStructures.Edge;
-import com.example.demo.dataStructures.Graph;
+import com.example.demo.dataStructures.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,11 +51,11 @@ public class GraphTest {
         graph.addVertex("F");
         graph.addVertex("G");
 
-        graph.addEdge("A", "B", 5);
+        graph.addEdge("A", "B", 6);
         graph.addEdge("A", "C", 5);
-        graph.addEdge("B", "D", 5);
-        graph.addEdge("B", "E", 5);
-        graph.addEdge("F", "G", 5);
+        graph.addEdge("B", "D", 7);
+        graph.addEdge("B", "E", 8);
+        graph.addEdge("F", "G", 9);
     }
 
     public void setUp5(){
@@ -65,6 +63,41 @@ public class GraphTest {
         //graph = new AdjacencyMatrix<>();
 
         graph.addVertex("A");
+    }
+
+    public void setUp6(){
+        graph = new AdjacencyList<>();
+        //graph = new AdjacencyMatrix<>();
+
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addVertex("C");
+        graph.addVertex("D");
+
+        graph.addEdge("A", "B", 8);
+        graph.addEdge("A", "C", 5);
+        graph.addEdge("A", "D", 3);
+    }
+
+    public void setUp7(){
+        graph = new AdjacencyList<>();
+        //graph = new AdjacencyMatrix<>();
+
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addVertex("C");
+        graph.addVertex("D");
+        graph.addVertex("E");
+        graph.addVertex("F");
+
+        graph.addEdge("A", "B", 8);
+        graph.addEdge("A", "C", 5);
+        graph.addEdge("A", "D", 3);
+        graph.addEdge("B", "D", 1);
+        graph.addEdge("B", "F", 5);
+        graph.addEdge("C", "E", 1);
+        graph.addEdge("D", "E", 4);
+        graph.addEdge("D", "C", 1);
     }
 
     @Test
@@ -215,6 +248,39 @@ public class GraphTest {
     }
 
     @Test
+    public void getNeighborsTestStandard(){
+        //Search neighbors of a vertex with edges
+        setUp6();
+
+        List<String> neighbors = graph.getNeighbors("A");
+
+        assertEquals(3, neighbors.size());
+        assertTrue(neighbors.contains("B"));
+        assertTrue(neighbors.contains("C"));
+        assertTrue(neighbors.contains("D"));
+    }
+
+    @Test
+    public void getNeighborsTestLimit(){
+        //Search neighbors when the graph just has one vertex
+        setUp5();
+        List<String> neighbors = graph.getNeighbors("A");
+
+        assertTrue(neighbors.isEmpty());
+    }
+
+    @Test
+    public void getNeighborsTestInteresting(){
+        //Search neighbors of a vertex without edges
+        setUp3();
+
+        List<String> neighbors = graph.getNeighbors("C");
+
+        assertEquals(0, neighbors.size());
+        assertFalse(neighbors.contains("B"));
+    }
+
+    @Test
     public void bfsTestStandard(){
         setUp4();
 
@@ -230,7 +296,7 @@ public class GraphTest {
         assertEquals("E", bfsTraversal.get(4));
 
     }
-    // revisar
+
     @Test
     public void bfsTestLimit(){
         // BFS from a vertex that does not exist
@@ -240,7 +306,7 @@ public class GraphTest {
         assertNull(bfsTraversal);
     }
     @Test
-    public void bfsTestIntersting(){
+    public void bfsTestInteresting(){
         // BFS from a graph that is disconnected
         setUp4();
         List<String> bfsTraversal = graph.bfs("F");
@@ -253,12 +319,11 @@ public class GraphTest {
 
     @Test
     public void dfsTestStandard(){
+        //DFS from a graph with vertices
         setUp4();
 
-        // Act
         List<String> dfsTraversal = graph.dfs("A");
 
-        // Assert
         assertEquals(5, dfsTraversal.size());
         assertEquals("A", dfsTraversal.get(0));
         assertEquals("C", dfsTraversal.get(1));
@@ -267,18 +332,18 @@ public class GraphTest {
         assertEquals("D", dfsTraversal.get(4));
 
     }
-    // revisar
     @Test
     public void dfsTestLimit(){
-        // BFS from a vertex that does not exist
+        // DFS from a vertex that does not exist
         setUp1();
         List<String> dfsTraversal = graph.dfs("A");
 
         assertEquals(0, graph.getVertices().size());
+        assertTrue(dfsTraversal.isEmpty());
     }
     @Test
-    public void dfsTestIntersting(){
-        // BFS from a graph that is disconnected
+    public void dfsTestInteresting(){
+        // DFS from a graph that is disconnected
         setUp4();
         List<String> dfsTraversal = graph.dfs("F");
 
@@ -288,4 +353,147 @@ public class GraphTest {
         assertEquals("G", dfsTraversal.get(1));
     }
 
+    @Test
+    public void dijkstraTestStandard(){
+        //Dijkstra from a graph with vertices and is disconnected
+        setUp3();
+        Map<String, Pair<Integer, String>> distances = graph.dijkstra("A");
+
+        assertEquals(0, distances.get("A").getFirst());
+        assertEquals(5, distances.get("B").getFirst());
+        assertEquals(13, distances.get("C").getFirst());
+
+    }
+
+    @Test
+    public void dijkstraTestLimit(){
+        // Dijkstra from graph with one node
+        setUp5();
+        Map<String, Pair<Integer, String>> distances = graph.dijkstra("A");
+
+        assertEquals(1, graph.getVertices().size());
+        assertEquals(0, distances.get("A").getFirst());
+    }
+
+    @Test
+    public void dijkstraTestInteresting(){
+        // Dijkstra from a graph with vertices that is disconnected and the vertex of start
+        // don't connected with the rest of the graph in that direction
+        setUp4();
+        Map<String, Pair<Integer, String>> distances = graph.dijkstra("C");
+
+        assertEquals(7, distances.size());
+        assertEquals(0, distances.get("C").getFirst());
+        assertFalse(distances.get("A").getFirst()==5);
+    }
+
+    @Test
+    public void floydWarshallTestStandard(){
+        //Floyd-Warshall from a graph with vertices and edges
+        setUp3();
+        Map<String, Map<String, Integer>> distances = graph.floydWarshall();
+
+        assertEquals(0, distances.get("A").get("A"));
+        assertEquals(5, distances.get("A").get("B"));
+        assertEquals(13, distances.get("A").get("C"));
+    }
+
+    @Test
+    public void floydWarshallTestLimit(){
+        //Floyd-Warshall from graph with one node
+        setUp5();
+        Map<String, Map<String, Integer>> distances = graph.floydWarshall();
+
+        assertEquals(1, graph.getVertices().size());
+        assertEquals(0, distances.get("A").get("A"));
+    }
+
+    @Test
+    public void floydWarshallTestInteresting(){
+        //Floyd-Warshall from a graph with vertices that is disconnected and the vertex of start
+        //don't connected with the rest of the graph in that direction
+        setUp4();
+        Map<String, Map<String, Integer>> distances = graph.floydWarshall();
+
+        assertEquals(7, distances.size());
+        assertEquals(0, distances.get("C").get("C"));
+        assertFalse(distances.get("C").get("A")==5);
+    }
+
+    @Test
+    public void primTestStandard(){
+        //Prim from a graph with vertices and edges
+        setUp3();
+        Map<String, String> mst = graph.primMST();
+
+        assertEquals(3, mst.size());
+        assertEquals("A", mst.get("B"));
+        assertEquals("B", mst.get("C"));
+    }
+
+    @Test
+    public void primTestLimit(){
+        //Prim from a graph with one vertex
+        setUp5();
+        Map<String, String> mst = graph.primMST();
+
+        assertEquals(1, graph.getVertices().size());
+        assertEquals(1, mst.size());
+    }
+
+    @Test
+    public void primTestInteresting(){
+        //Prim from a graph with a cyclic path
+        setUp7();
+        Map<String, String> mst = graph.primMST();
+
+        assertEquals(6, mst.size());
+        assertEquals("A", mst.get("B"));
+        assertEquals("D", mst.get("C"));
+        assertEquals("A", mst.get("D"));
+        assertEquals("C", mst.get("E"));
+        assertEquals("B", mst.get("F"));
+    }
+
+    @Test
+    public void kruskalTestStandard(){
+        //Kruskal from a graph with vertices and edges
+        setUp3();
+        List<Edge<String>> mst = graph.kruskalMST();
+
+        assertEquals(2, mst.size());
+        assertEquals("A", mst.get(0).getSource().getValue());
+        assertEquals("B", mst.get(0).getNode().getValue());
+        assertEquals("B", mst.get(1).getSource().getValue());
+        assertEquals("C", mst.get(1).getNode().getValue());
+    }
+
+    @Test
+    public void kruskalTestLimit(){
+        //Kruskal from a graph with one vertex
+        setUp5();
+        List<Edge<String>> mst = graph.kruskalMST();
+
+        assertEquals(1, graph.getVertices().size());
+        assertEquals(0, mst.size());
+    }
+
+    @Test
+    public void kruskalTestInteresting(){
+        //Kruskal from a graph with a cyclic path
+        setUp7();
+        List<Edge<String>> mst = graph.kruskalMST();
+
+        assertEquals(5, mst.size());
+        assertEquals("B", mst.get(0).getSource().getValue());
+        assertEquals("D", mst.get(0).getNode().getValue());
+        assertEquals("C", mst.get(1).getSource().getValue());
+        assertEquals("E", mst.get(1).getNode().getValue());
+        assertEquals("D", mst.get(2).getSource().getValue());
+        assertEquals("C", mst.get(2).getNode().getValue());
+        assertEquals("A", mst.get(3).getSource().getValue());
+        assertEquals("D", mst.get(3).getNode().getValue());
+        assertEquals("B", mst.get(4).getSource().getValue());
+        assertEquals("F", mst.get(4).getNode().getValue());
+    }
 }

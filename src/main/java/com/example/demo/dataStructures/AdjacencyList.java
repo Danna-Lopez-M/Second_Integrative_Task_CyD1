@@ -251,8 +251,8 @@ public class AdjacencyList<T extends Comparable<T>> extends Graph<T> {
 
     public List<Edge<T>> kruskalMST() {
         List<Edge<T>> mst = new ArrayList<>();
-
         List<Edge<T>> edges = new ArrayList<>();
+
         for (Node<T> node : map.values()) {
             edges.addAll(node.getEdges());
         }
