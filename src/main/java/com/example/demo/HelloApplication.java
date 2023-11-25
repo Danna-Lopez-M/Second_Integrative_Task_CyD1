@@ -128,13 +128,11 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.show();
     }
-    private void generateConnections() {
-        System.out.println("generar conexiones..");
-        System.out.println(graph.getVertices());
-        System.out.println(graph.dijkstra(1).containsKey(50));
-        System.out.println("bfs:"+graph.bfs(1).contains(50));
+    public void generateConnections() {
+        if(graph.bfs(1).contains(50)) return;
+        int numConnections = 0;
+        // verificar que haya un camino
         while (!graph.bfs(1).contains(50)) {
-            System.out.println("generar edges...");
             int source = (int) (Math.random() * 51);
             int target;
 
@@ -145,9 +143,9 @@ public class HelloApplication extends Application {
             int weight = (int) (Math.random() * 7) + 1;
 
             graph.addEdge(source, target, weight);
-            System.out.println("source: " + source + "target" + target);
+            numConnections++;
+            //System.out.println("Connection added: " + source + " -> " + target);
         }
-        System.out.println(graph.dijkstra(1));
     }
 
 
@@ -232,5 +230,13 @@ public class HelloApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public IGraph<Integer> getGraph() {
+        return graph;
+    }
+
+    public void setGraph(IGraph<Integer> graph) {
+        this.graph = graph;
     }
 }
