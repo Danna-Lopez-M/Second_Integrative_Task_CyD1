@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8d8a5e2a-d6f5-4b5c-be3c-48915ea3e215" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/AdjacencyList.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/AdjacencyMatrix.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/DisjointSet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/Edge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/Edge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/Graph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/IDataStructures/IGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/IDataStructures/IGraph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/Node.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/Pair.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/demo/dataStructures/Pair.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/testing/Graph/GraphTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/testing/Graph/GraphTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="8d8a5e2a-d6f5-4b5c-be3c-48915ea3e215" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
