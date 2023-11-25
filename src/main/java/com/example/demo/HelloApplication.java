@@ -104,8 +104,8 @@ public class HelloApplication extends Application {
             root.getChildren().add(radioButton);
 
             // Calcular las coordenadas para formar una cuadrícula
-            double col = (i) % NUM_COLS;
-            double row = (i) / NUM_COLS;
+            double col = (i - 1) % NUM_COLS;
+            double row = (i - 1) / NUM_COLS;
 
             double x = col * DISTANCE_X;
             double y = row * DISTANCE_Y;
